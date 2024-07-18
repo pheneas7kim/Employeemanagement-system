@@ -1,0 +1,156 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: orange;
+    margin: 0;
+    padding: 0;
+}
+
+        .center {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.messages {
+    list-style-type: none;
+    padding: 0;
+}
+
+.messages li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.messages .success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form .button-group {
+    margin-top: 10px;
+}
+
+form .button-group .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+form .button-group .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+form .button-group .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+form .button-group .btn:hover {
+    opacity: 0.9;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+    </style>
+
+</head>
+<body >
+    <div class="center">
+        <h1 style="background-color: rgb(255, 51, 0);color: #2bff00;">EMPLOYEE MANAGEMENT SYSTEM</h1>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="button-group">
+                <button style="background-color: #2bff00;"  type="submit" name="action" value="Save" class="btn">Save</button>
+                <button style="background-color: #00ff2a;" type="submit" name="action" value="Clear" class="btn">Clear</button>
+            </div>
+        </form>
+
+        <h2>Search Employee</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ search_form.as_p }}
+            <button  style="background-color: #51ff00;"type="submit" name="search" class="btn">Search</button>
+        </form>
+
+        <h2>All Employees</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.employee_id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.gender }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.department }}</td>
+                <td>{{ employee.address }}</td>
+                <td>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button style="background-color: red;"  type="submit" name="delete" value="{{ employee.id }}" class="btn btn-danger">Delete</button>
+                    </form>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button  style="background-color:rgb(73, 128, 0);" type="submit" name="update" value="{{ employee.id }}" class="btn btn-primary">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No employees found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
